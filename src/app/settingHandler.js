@@ -1,28 +1,28 @@
 const electron = require('electron');
-const fs = __importDefault(require('fs'));
-const path = __importDefault(require('path'));
-const write_file_atomic = __importDefault(require('write-file-atomic'));
+const fs = require('fs');
+const path = require('path');
+const write_file_atomic = require('write-file-atomic');
 class SettingHandler {
     constructor() {
-        this.settingsFilePath = `${path.default.dirname(
+        this.settingsFilePath = `${path.dirname(
             electron.app.getPath('userData')
-        )}${path.default.sep}settings.json`;
+        )}${path.sep}settings.json`;
         this.ensureFileSync();
         this.settings = {};
         try {
             this.settings = JSON.parse(
-                fs.default.readFileSync(this.settingsFilePath, 'utf-8')
+                fs.readFileSync(this.settingsFilePath, 'utf-8')
             );
         } catch {
             this.resetAll();
             this.settings = JSON.parse(
-                fs.default.readFileSync(this.settingsFilePath, 'utf-8')
+                fs.readFileSync(this.settingsFilePath, 'utf-8')
             );
         }
     }
     ensureFileSync() {
         try {
-            fs.default.statSync(this.settingsFilePath);
+            fs.statSync(this.settingsFilePath);
         } catch (err) {
             if (err.code === 'ENOENT') {
                 console.debug('creating file');
@@ -31,7 +31,7 @@ class SettingHandler {
         }
     }
     saveSettings() {
-        write_file_atomic.default.sync(
+        write_file_atomic.sync(
             this.settingsFilePath,
             JSON.stringify(this.settings, null, 4)
         );

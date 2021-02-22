@@ -2,7 +2,7 @@ const electron = require('electron');
 const common = require('../common');
 const fs = require('fs');
 const path = require('path');
-const node_fetch = __importDefault(require('node-fetch'));
+const node_fetch = require('node-fetch');
 const events = require('events');
 const semver = require('semver');
 class Updater extends events.EventEmitter {
@@ -47,7 +47,7 @@ class Updater extends events.EventEmitter {
         try {
             const res = this.decodeReleaseResponse(
                 await (
-                    await node_fetch.default(
+                    await node_fetch(
                         'https://api.github.com/repos/repl-it-discord/repl-it-electron/releases/latest'
                     )
                 ).json()
@@ -94,7 +94,7 @@ class Updater extends events.EventEmitter {
     }
     async downloadUpdate(url) {
         try {
-            const req = await node_fetch.default(url);
+            const req = await node_fetch(url);
             const contentLength = parseInt(req.headers.get('content-length'));
             const filename = url.split('/').pop();
             this.downloadFilePath = `${this.downloadPath}${filename}`;

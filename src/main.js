@@ -1,4 +1,5 @@
-const launcher = require('./launcher/launcher');
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const launcher_ = require('./launcher/launcher');
 const electron = require('electron');
 const path = require('path');
 const common = require('./common');
@@ -15,11 +16,9 @@ electron.app.disableHardwareAcceleration();
 process.on('unhandledRejection', (rejection) => {
     console.error(`[Unhandled Promise Rejction] ${rejection.stack}`);
 });
-let launcher;
-let updater;
-let mainApp;
+
 function initLauncher() {
-    launcher = new launcher.Launcher();
+    launcher = new launcher_.Launcher();
     launcher.init();
     launcher.window.webContents.once('did-finish-load', () => {
         launcher.window.show();
@@ -36,7 +35,7 @@ async function initApp() {
     mainApp.mainWindow.on('close', () => electron.app.quit());
 }
 async function initUpdater() {
-    updater = new launcher.Updater(launcher);
+    updater = new launcher_.Updater(launcher);
     if (process.execPath.includes('electron')) {
         updater.cleanUp(true);
     }

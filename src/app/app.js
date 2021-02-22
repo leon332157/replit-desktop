@@ -4,7 +4,7 @@ const popoutHandler = require('./popoutHandler/popoutHandler');
 const themeHandler = require('./themeHandler/themeHandler');
 const discordHandler = require('./discordHandler');
 const settingHandler = require('./settingHandler');
-const electron_context_menu = __importDefault(require('electron-context-menu'));
+const electron_context_menu = require('electron-context-menu');
 const appMenuSetup = require('./menu/appMenuSetup');
 const events = require('events');
 class App extends events.EventEmitter {
@@ -106,7 +106,7 @@ class App extends events.EventEmitter {
         }
     }
     addWindow(window) {
-        electron_context_menu.default({ window: window });
+        electron_context_menu({ window: window });
         this.windowArray.push(window);
         window.webContents.on('will-navigate', (e, url) => {
             common.handleExternalLink(e, window, url);

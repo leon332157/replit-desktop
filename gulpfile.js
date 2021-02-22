@@ -22,9 +22,13 @@ async function runElectron() {
         child.kill();
     }
 
-    child = proc.spawn(electron, ['--no-sandbox', '--trace-warnings', '.'], {
-        cwd: './ts-out'
-    });
+    child = proc.spawn(
+        electron,
+        ['--no-sandbox', '--trace-warnings', 'main.js'],
+        {
+            cwd: './src'
+        }
+    );
 
     child.on('error', function (err) {
         errored = true;
@@ -156,13 +160,10 @@ async function watchDev() {
     runElectron();
 }
 async function buildDevWatch() {
-    return new Promise((resolve, reject) => {
-        gulp.src('src/**/*.ts')
-            .pipe(cache('buildDev', { optimizeMemory: true }))
-            .pipe(tsProject(ts.reporter.fullReporter()))
-            .pipe(gulp.dest('ts-out/'))
-            .on('end', resolve);
-    });
+    gulp.src('src/**/*.ts')
+        .pipe(cache('buildDev'))
+        .pipe(tsProject(ts.reporter.fullReporter()))
+        .pipe(gulp.dest('ts-out/'));
 }
 
 async function buildDev() {
@@ -178,7 +179,7 @@ async function buildDev() {
 
 module.exports.watchDev = watchDev;
 module.exports.buildAndRun = gulp.series(
-    buildDev,
+    //buildDev,
     copyFilesDevNoCache,
     runElectron
 );
