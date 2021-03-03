@@ -5,13 +5,16 @@ import { SettingHandler } from '../settingHandler';
 
 class ThemeHandler {
     private readonly settings: SettingHandler;
+
     private theme_market: ElectronWindow;
+
     constructor(settings: SettingHandler, Main: ElectronWindow) {
         this.settings = settings;
         ipcMain.on('Theme', (event, code: string) => {
             this.addTheme(Main, code);
         });
     }
+
     openWindow() {
         this.theme_market = new ElectronWindow(
             {

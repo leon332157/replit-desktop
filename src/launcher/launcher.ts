@@ -20,9 +20,13 @@ class Updater extends EventEmitter {
         macOSUrl: '',
         linuxUrl: ''
     };
+
     private appVersion: Version;
+
     private downloadPath: string = `${app.getPath('appData')}updaterDownload/`;
+
     private downloadFilePath: string;
+
     private launcher: Launcher;
 
     constructor(launcher: Launcher) {

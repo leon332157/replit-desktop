@@ -16,10 +16,15 @@ interface WindowSize {
 
 class App extends EventEmitter {
     public readonly mainWindow: ElectronWindow;
+
     public readonly themeHandler: ThemeHandler;
+
     public readonly popoutHandler: PopoutHandler;
+
     public readonly discordHandler: DiscordHandler;
+
     protected windowArray: Map<number, ElectronWindow>;
+
     private readonly settingsHandler: SettingHandler;
 
     constructor() {
@@ -182,10 +187,14 @@ This action is NOT reversible!`
             )
         ) {
             this.settingsHandler.clearAll();
-            [...this.windowArray.values()].forEach((win) => {
-                win.reload();
-            });
+            this.reloadAllWindows();
         }
+    }
+
+    reloadAllWindows() {
+        [...this.windowArray.values()].forEach((win) => {
+            win.reload();
+        });
     }
 
     addWindow(window: ElectronWindow, handleExt: boolean = true) {
@@ -232,7 +241,6 @@ This action is NOT reversible!`
         });
 
         this.windowArray.set(window.id, window);
-        this.toggleAce();
 
         window.webContents.on('will-navigate', (e, url) => {
             // Deal with the logout

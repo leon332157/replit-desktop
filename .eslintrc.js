@@ -17,6 +17,7 @@ module.exports = {
         'no-var': 'error',
         'no-useless-concat': 'error',
         'prefer-template': 'error',
+        'lines-between-class-members': ['error', 'always'],
         'prettier/prettier': 'error',
         '@typescript-eslint/naming-convention': [
             'error',

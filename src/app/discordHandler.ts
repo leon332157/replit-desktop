@@ -7,7 +7,9 @@ import Timeout = NodeJS.Timeout;
 const startTimestamp = Date.now();
 class DiscordHandler {
     private client: Client;
+
     private readonly window: ElectronWindow;
+
     private discordTimer: Timeout;
 
     constructor(window: ElectronWindow) {
