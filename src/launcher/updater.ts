@@ -1,6 +1,6 @@
 import { app, shell } from 'electron';
 import { EventEmitter } from 'events';
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 import { CheckUpdateResult, GithubReleaseResponse, UpdateAssetsUrls, Version } from '../common';
 import { Launcher } from './launcher';
@@ -48,9 +48,10 @@ class Updater extends EventEmitter {
 
     async checkUpdate(): Promise<CheckUpdateResult> {
         try {
-            const res: GithubReleaseResponse = this.decodeReleaseResponse(
-                await (await fetch('https://api.github.com/repos/replit-discord/replit-desktop/releases/latest')).json()
-            );
+            const req = await axios.get('https://api.github.com/repos/replit-discord/replit-desktop/releases/latest', {
+                responseType: 'json'
+            });
+            const res: GithubReleaseResponse = this.decodeReleaseResponse(req.data);
             if (!res.tag_name) return { hasUpdate: false };
             if (res.tag_name.includes('alpha') || res.tag_name.includes('beta')) {
                 return { hasUpdate: false };
@@ -90,16 +91,16 @@ class Updater extends EventEmitter {
 
     async downloadUpdate(url: string): Promise<void> {
         try {
-            const req = await fetch(url);
+            const req = await axios.get(url, { responseType: 'stream' });
 
-            const contentLength: number = parseInt(req.headers.get('content-length'));
+            const contentLength: number = parseInt(req.headers['content-length']);
             const filename = url.split('/').pop();
             this.downloadFilePath = `${this.downloadPath}${filename}`;
             let downloaded: number = 0;
             if (!fs.existsSync(this.downloadPath)) {
                 fs.mkdirSync(this.downloadPath, { recursive: true });
             }
-            req.body
+            req.data
                 .on('data', (chunk: Buffer) => {
                     downloaded += chunk.length;
                     const percentage = Math.floor((downloaded / contentLength) * 100);
@@ -109,7 +110,7 @@ class Updater extends EventEmitter {
                     });
                 })
                 .pipe(fs.createWriteStream(this.downloadFilePath));
-            req.body.on('end', () => {
+            req.data.on('end', () => {
                 this.launcher.updateStatus({ text: 'Download Finished' });
                 this.emit('download-finished');
             });
